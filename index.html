@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOU'VE BEEN GNOMED!!</title>
+  <link rel="icon" href="gnome.png">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #f7f7f2;
+      color: #171717;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      padding: 32px 20px;
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: clamp(42px, 10vw, 88px);
+      line-height: .95;
+      letter-spacing: -.07em;
+      font-weight: 900;
+    }
+
+    p {
+      margin: 0 0 28px;
+      color: #666;
+      font-size: 15px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 4px;
+      padding: 13px 20px;
+      background: #171717;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #6e9d35;
+    }
+
+    footer {
+      position: fixed;
+      z-index: 2;
+      bottom: 18px;
+      left: 0;
+      right: 0;
+      color: #999;
+      font-size: 11px;
+    }
+
+    .gnome {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      object-fit: contain;
+      opacity: 0.65;
+      pointer-events: none;
+      will-change: transform;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1 id="message">YOU'VE BEEN<br>GNOMED!</h1>
+    <p>by Mark Torvalsky</p>
+    <button id="gnome">GNOME AGAIN</button>
+  </main>
+
+  <footer>© MARK TORVALSKY</footer>
+
+  <script>
+    const message = document.getElementById('message');
+    let green = false;
+
+    document.getElementById('gnome').addEventListener('click', () => {
+      green = !green;
+      message.textContent = 'GNOMED!';
+      message.style.color = green ? '#6e9d35' : '#171717';
+    });
+
+    function makeGnomes() {
+      document.querySelectorAll('.gnome').forEach(gnome => gnome.remove());
+
+      for (let i = 0; i < 20; i++) {
+        const gnome = document.createElement('img');
+        gnome.src = 'gnome.png';
+        gnome.className = 'gnome';
+
+        const size = 35 + Math.random() * 55;
+        gnome.style.width = `${size}px`;
+        gnome.style.height = `${size}px`;
+        document.body.appendChild(gnome);
+
+        const points = Array.from({ length: 7 }, () => ({
+          x: Math.random() * Math.max(0, window.innerWidth - size),
+          y: Math.random() * Math.max(0, window.innerHeight - size)
+        }));
+
+        const keyframes = points.map((point, index) => ({
+          transform: `translate(${point.x}px, ${point.y}px) rotate(${index * 360}deg)`
+        }));
+
+        gnome.animate(keyframes, {
+          duration: 10000 + Math.random() * 10000,
+          iterations: Infinity,
+          easing: 'linear'
+        });
+      }
+    }
+
+    makeGnomes();
+    window.addEventListener('resize', makeGnomes);
+  </script>
+</body>
+</html>
